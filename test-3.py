@@ -5,6 +5,8 @@
 import random
 import pygame
 
+print("press SPACE to change map")
+
 # COLOURS - (R, G, B)
 # CONSTANTS ALL HAVE CAPS FOR THEIR NAMES
 WHITE = (255, 255, 255)
@@ -251,30 +253,26 @@ def move(sprite, vel: int):
 def spawn_tree(pos: int):
     pass
 
-def spawn_push_blocks(amount: int):
-    for push_block in range(int(amount)):
-        push_block = Map()
-        push_block.image.fill(WHITE)
-        push_block_size_x = random.randint(centerx - map_size, centerx + map_size)
-        push_block_size_y = random.randint(centery - map_size, centery + map_size)
-        push_block.rect.center = push_block_size_x, push_block_size_y
-        push_block_last_center = push_block.rect.center
-        all_sprites_group.add(push_block)
-        white_map_sprites_group.add(push_block)
-        push_block_sprites_group.add(push_block)
-        map_sprites_group.add(push_block)
+def spawn_white_map(amount: int, pos_x: int, pos_y: int):
+    for white_map in range(int(amount)):
+        white_map = Map()
+        white_map.image.fill(WHITE)
+        white_map.rect.center = pos_x, pos_y
+        white_map_last_center = white_map.rect.center
+        all_sprites_group.add(white_map)
+        white_map_sprites_group.add(white_map)
+        push_block_sprites_group.add(white_map)
+        map_sprites_group.add(white_map)
 
-def spawn_map(amount: int):
-    for map in range(int(amount)):
-        map = Map()
-        map.image.fill(BLACK)
-        map_size_x = random.randint(centerx - map_size, centerx + map_size)
-        map_size_y = random.randint(centery - map_size, centery + map_size)
-        map.rect.center = map_size_x, map_size_y
-        map_last_center = map.rect.center
-        all_sprites_group.add(map)
-        black_map_sprites_group.add(map)
-        map_sprites_group.add(map)
+def spawn_black_map(amount: int, pos_x: int, pos_y: int):
+    for black_map in range(int(amount)):
+        black_map = Map()
+        black_map.image.fill(BLACK)
+        black_map.rect.center = pos_x, pos_y
+        black_map_last_center = black_map.rect.center
+        all_sprites_group.add(black_map)
+        black_map_sprites_group.add(black_map)
+        map_sprites_group.add(black_map)
 
 def spawn_border():
     border_up = Borderx()
@@ -322,10 +320,12 @@ def game():
     #all_sprites_group.add(light)
 
     # push-able blocks
-    spawn_push_blocks(round(int(map_size / 50)))
+    for i in range(round(int(map_size / 50))):
+        spawn_white_map(1, random.randint(centery - map_size, centery + map_size), random.randint(centery - map_size, centery + map_size))
 
-    # map
-    spawn_map(round(int(map_size / 40)))
+    # Map
+    for i in range(round(int(map_size / 50))):
+        spawn_black_map(1, random.randint(centery - map_size, centery + map_size), random.randint(centery - map_size, centery + map_size))
 
     # border
     spawn_border()
@@ -606,8 +606,25 @@ def game():
 
         if a == 1:
             screen.fill(WHITE)
+            """
+            for black_map in black_map_sprites_group:
+                black_x = black_map.rect.centerx
+                black_y = black_map.rect.centery
+                black_map.kill()
+                spawn_black_map(1, black_x, black_y)
+            """
+
+
+
         else:
             screen.fill(BLACK)
+            """
+            for white_map in white_map_sprites_group:
+                white_x = white_map.rect.centerx
+                white_y = white_map.rect.centery
+                white_map.kill()
+                spawn_white_map(1, white_x, white_y)
+            """
 
         # Draw all the sprites
         all_sprites_group.draw(screen)
